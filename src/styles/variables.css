@@ -1,0 +1,35 @@
+:root {
+  /* ===== BACKGROUND ===== */
+  --bg: #0d1117; /* глубокий тёмный фон */
+  --bg-secondary: #161b22; /* чуть светлее — для градиентов */
+
+  /* ===== CARDS / GLASS ===== */
+  --card: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --blur: 18px;
+
+  /* ===== TEXT ===== */
+  --text: #e6edf3; /* мягкий белый */
+  --muted: rgba(230, 237, 243, 0.55);
+
+  /* ===== ACCENTS (спокойные, чатовые) ===== */
+  --primary: #4f8cff; /* мягкий синий, как в Telegram */
+  --primary-hover: #6aa2ff;
+  --primary-glow: rgba(79, 140, 255, 0.35);
+
+  /* ===== MESSAGE BUBBLES ===== */
+  --bubble-me: linear-gradient(135deg, #4f8cff, #6aa2ff);
+  --bubble-other: rgba(255, 255, 255, 0.06);
+
+  /* ===== STATUS COLORS ===== */
+  --error: #ff4d4f;
+  --success: #4cd964;
+
+  /* ===== RADII ===== */
+  --radius-lg: 16px;
+  --radius-md: 10px;
+
+  /* ===== SHADOWS ===== */
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 25px var(--primary-glow);
+}
