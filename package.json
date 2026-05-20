@@ -17,9 +17,11 @@
     ]
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.4",
+    "@supabase/supabase-js": "^2.106.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
