@@ -1,24 +1,48 @@
+import { useAuthStore } from '@/store/authStore';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
+async function parseError(response: Response) {
+  try {
+    const data = await response.json();
+    return (
+      data.error ||
+      data.message ||
+      data?.error?.message ||
+      data?.errors?.[0]?.message ||
+      JSON.stringify(data)
+    );
+  } catch {
+    return response.text();
+  }
+}
 
 export async function apiRequest<T>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
-  body?: Json
+  body?: Record<string, unknown>,
+  signal?: AbortSignal
 ): Promise<T> {
-  const response = await fetch(`${API_URL}${url}`, {
+  const token = useAuthStore.getState().accessToken;
+
+  const options: RequestInit = {
     method,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+    signal,
+  };
+
+  if (method !== 'GET' && body !== undefined) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${API_URL}${url}`, options);
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || 'Request error');
+    throw new Error(await parseError(response));
   }
 
   return response.json() as Promise<T>;
