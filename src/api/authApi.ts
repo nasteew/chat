@@ -1,32 +1,36 @@
+import type { AuthResponse } from '@/types/auth';
 import { apiRequest } from './apiRequest';
 
-export interface User {
-  id: string;
-  login: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  user: User;
-}
-
 export const authApi = {
-  login(login: string, password: string) {
-    return apiRequest<AuthResponse>('/auth/login', 'POST', { login, password });
+  login(email: string, password: string, signal?: AbortSignal) {
+    return apiRequest<AuthResponse>(
+      '/auth/login',
+      'POST',
+      { email, password },
+      signal
+    );
   },
 
-  refresh() {
-    return apiRequest<AuthResponse>('/auth/refresh', 'POST');
+  refresh(signal?: AbortSignal) {
+    return apiRequest<AuthResponse>('/auth/refresh', 'POST', undefined, signal);
   },
 
-  logout() {
-    return apiRequest<void>('/auth/logout', 'POST');
+  logout(signal?: AbortSignal) {
+    return apiRequest<void>('/auth/logout', 'POST', undefined, signal);
   },
 
-  register(login: string, password: string) {
-    return apiRequest<AuthResponse>('/auth/register', 'POST', {
-      login,
-      password,
-    });
+  register(
+    username: string,
+    display_name: string,
+    email: string,
+    password: string,
+    signal?: AbortSignal
+  ) {
+    return apiRequest<AuthResponse>(
+      '/auth/register',
+      'POST',
+      { username, display_name, email, password },
+      signal
+    );
   },
 };
