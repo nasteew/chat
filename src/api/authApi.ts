@@ -1,5 +1,6 @@
 import type { AuthResponse } from '@/types/auth';
 import { apiRequest } from './apiRequest';
+import { refreshAccessToken } from './tokenRefresh';
 
 export const authApi = {
   login(email: string, password: string, signal?: AbortSignal) {
@@ -12,7 +13,8 @@ export const authApi = {
   },
 
   refresh(signal?: AbortSignal) {
-    return apiRequest<AuthResponse>('/auth/refresh', 'POST', undefined, signal);
+    void signal;
+    return refreshAccessToken();
   },
 
   logout(signal?: AbortSignal) {
