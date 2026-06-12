@@ -3,7 +3,7 @@
   publish = "dist"
 
 [build.environment]
-  VITE_API_URL = "https://fun-chat-server.onrender.com"
+  VITE_API_URL = "https://chat-server-eb5x.onrender.com"
 
 [[redirects]]
   from = "/*"
