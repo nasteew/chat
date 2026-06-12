@@ -1,4 +1,3 @@
-// ProfilePage.tsx
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -25,6 +24,7 @@ import {
 } from 'lucide-react';
 import type { ProfileUpdateData } from '@/api/userApi';
 import { userApi } from '@/api/userApi';
+import { authApi } from '@/api/authApi';
 
 type ModalType = 'username' | 'name' | 'email' | 'password' | 'delete' | null;
 
@@ -166,14 +166,17 @@ export function ProfilePage() {
     );
   };
 
-  // ⭐ Удаление аккаунта
   const handleDeleteAccount = async () => {
     try {
+      await authApi.deleteAccount();
+      close();
       await logout();
       navigate('/login');
       toast.success('Account deleted');
-    } catch {
-      toast.error('Failed to delete account');
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : 'Failed to delete account'
+      );
     }
   };
 
@@ -185,14 +188,12 @@ export function ProfilePage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* LEFT */}
         <div className={styles.sidebar}>
           <button className={styles.backButton} onClick={() => navigate(-1)}>
             <ArrowLeft size={14} />
             Back
           </button>
 
-          {/* Avatar */}
           <div
             className={styles.avatarSection}
             onClick={() => !avatarUploading && fileInputRef.current?.click()}
@@ -265,9 +266,7 @@ export function ProfilePage() {
           </nav>
         </div>
 
-        {/* RIGHT */}
         <div className={styles.content}>
-          {/* Profile info card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardHeaderIcon}>
@@ -315,7 +314,6 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Security card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardHeaderIcon}>
@@ -343,7 +341,6 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Account card */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardHeaderIcon}>
@@ -399,7 +396,6 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {/* MODALS */}
       <Modal
         isOpen={activeModal === 'username'}
         onClose={close}

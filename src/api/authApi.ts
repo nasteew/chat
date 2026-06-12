@@ -21,6 +21,15 @@ export const authApi = {
     return apiRequest<void>('/auth/logout', 'POST', undefined, signal);
   },
 
+  deleteAccount(signal?: AbortSignal) {
+    return apiRequest<{ ok: boolean }>(
+      '/auth/delete',
+      'POST',
+      undefined,
+      signal
+    );
+  },
+
   register(
     username: string,
     display_name: string,
