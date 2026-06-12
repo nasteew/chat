@@ -1,5 +1,9 @@
 .layout {
-  height: 100%;
   min-height: 100dvh;
+  height: 100%;
+}
+
+.layoutChat {
+  height: 100dvh;
   overflow: hidden;
 }

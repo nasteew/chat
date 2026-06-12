@@ -1,6 +1,11 @@
 .page {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   padding: 40px 48px;
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
   background: var(--bg);
   animation: fadeIn 0.3s ease;
 }
@@ -378,6 +383,8 @@
 @media (max-width: 600px) {
   .page {
     padding: 16px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
   .fieldRow {
     padding: 14px 18px;
