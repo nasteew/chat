@@ -55,7 +55,15 @@ export const MessageList = () => {
   } = useMessageEdit(id ?? '');
 
   const { remove: deleteMsg } = useMessageDelete(id ?? '');
-  const { contextMenu, open: openMenu, close: closeMenu } = useContextMenu();
+  const {
+    contextMenu,
+    menuRef,
+    openFromMouse,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+    close: closeMenu,
+  } = useContextMenu();
 
   const handleClick = useCallback(() => {
     handleScroll();
@@ -126,8 +134,14 @@ export const MessageList = () => {
                           isLast ? styles.lastInGroup : '',
                         ].join(' ')}
                         onContextMenu={(e) =>
-                          openMenu(e, m.id, isMe && !m.isDeleted)
+                          openFromMouse(e, m.id, isMe && !m.isDeleted)
                         }
+                        onTouchStart={(e) =>
+                          handleTouchStart(e, m.id, isMe && !m.isDeleted)
+                        }
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchCancel={handleTouchEnd}
                       >
                         {editingId === m.id ? (
                           <div className={styles.editContainer}>
@@ -211,6 +225,7 @@ export const MessageList = () => {
 
       {contextMenu && (
         <div
+          ref={menuRef}
           className={styles.contextMenu}
           style={{ left: contextMenu.x, top: contextMenu.y }}
           onClick={(e) => e.stopPropagation()}

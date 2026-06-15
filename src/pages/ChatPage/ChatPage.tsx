@@ -15,7 +15,6 @@ import { useChatListStore } from '@/store/chatListStore';
 
 export const ChatPage = () => {
   const { id: chatId } = useParams();
-  useChatStore.getState().setActiveChatId(chatId ?? '');
 
   const { user } = useAuthStore();
   useOtherUser(chatId ?? '', user?.id);

@@ -11,6 +11,12 @@ interface ChatListStore {
   setChats: (chats: Chat[]) => void;
 
   updateChatOnNewMessage: (msg: Message) => void;
+  updateChatOnMessageEdit: (
+    chatId: string,
+    messageId: string,
+    content: string
+  ) => void;
+  updateChatOnMessageDelete: (chatId: string, messageId: string) => void;
 
   markChatAsRead: (chatId: string) => void;
 
@@ -81,6 +87,59 @@ export const useChatListStore = create<ChatListStore>((set) => ({
       const chats = [...state.chats];
       chats.splice(idx, 1);
       chats.unshift(updatedChat);
+
+      return { chats, version: Date.now() };
+    }),
+
+  updateChatOnMessageEdit: (chatId, messageId, content) =>
+    set((state) => {
+      const normalizedId = String(chatId);
+      const idx = state.chats.findIndex((c) => String(c.id) === normalizedId);
+      if (idx === -1) return state;
+
+      const chat = state.chats[idx];
+      if (
+        !chat.lastMessage ||
+        String(chat.lastMessage.id) !== String(messageId)
+      ) {
+        return state;
+      }
+
+      const chats = [...state.chats];
+      chats[idx] = {
+        ...chat,
+        lastMessage: {
+          ...chat.lastMessage,
+          content,
+        },
+      };
+
+      return { chats, version: Date.now() };
+    }),
+
+  updateChatOnMessageDelete: (chatId, messageId) =>
+    set((state) => {
+      const normalizedId = String(chatId);
+      const idx = state.chats.findIndex((c) => String(c.id) === normalizedId);
+      if (idx === -1) return state;
+
+      const chat = state.chats[idx];
+      if (
+        !chat.lastMessage ||
+        String(chat.lastMessage.id) !== String(messageId)
+      ) {
+        return state;
+      }
+
+      const chats = [...state.chats];
+      chats[idx] = {
+        ...chat,
+        lastMessage: {
+          ...chat.lastMessage,
+          content: 'Message deleted',
+          isDeleted: true,
+        },
+      };
 
       return { chats, version: Date.now() };
     }),

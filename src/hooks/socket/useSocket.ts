@@ -91,15 +91,33 @@ export function useSocket() {
           break;
         }
 
-        case 'MSG_EDITED':
-          useChatStore
-            .getState()
-            .editMessage(msg.payload.message_id, msg.payload.content);
-          break;
+        case 'MSG_EDITED': {
+          const { chat_id, message_id, content } = msg.payload;
+          const chatStore = useChatStore.getState();
 
-        case 'MSG_DELETED':
-          useChatStore.getState().deleteMessage(msg.payload.message_id);
+          if (String(chatStore.activeChatId) === String(chat_id)) {
+            chatStore.editMessage(message_id, content);
+          }
+
+          useChatListStore
+            .getState()
+            .updateChatOnMessageEdit(chat_id, message_id, content);
           break;
+        }
+
+        case 'MSG_DELETED': {
+          const { chat_id, message_id } = msg.payload;
+          const chatStore = useChatStore.getState();
+
+          if (String(chatStore.activeChatId) === String(chat_id)) {
+            chatStore.deleteMessage(message_id);
+          }
+
+          useChatListStore
+            .getState()
+            .updateChatOnMessageDelete(chat_id, message_id);
+          break;
+        }
 
         case 'MESSAGES_READ_ACK': {
           const { chat_id, last_read_message_id } = msg.payload;

@@ -1,6 +1,7 @@
 // hooks/chat/useMessageDelete.ts
 // Удаление сообщения
 import { useChatStore } from '@/store/chatStore';
+import { useChatListStore } from '@/store/chatListStore';
 import { socketService } from '@/api/socket';
 
 export function useMessageDelete(chatId: string) {
@@ -12,6 +13,7 @@ export function useMessageDelete(chatId: string) {
       payload: { chat_id: chatId, message_id: messageId },
     });
     deleteMessage(messageId);
+    useChatListStore.getState().updateChatOnMessageDelete(chatId, messageId);
   };
 
   return { remove };

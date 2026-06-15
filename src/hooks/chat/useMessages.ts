@@ -50,8 +50,8 @@ export function useMessages(chatId: string) {
             userId: m.sender_id,
             content: m.content,
             created_at: m.created_at,
-            isEdited: m.is_edited,
-            isDeleted: m.is_deleted,
+            isEdited: Boolean(m.is_edited),
+            isDeleted: Boolean(m.is_deleted),
             isRead: m.is_read,
             status,
           };
