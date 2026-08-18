@@ -42,6 +42,10 @@ export async function refreshAccessToken(): Promise<AuthResponse> {
       headers: { 'Content-Type': 'application/json' },
     });
 
+    if (response.status === 204) {
+      throw new Error('No session');
+    }
+
     if (!response.ok) {
       const message = await response.text().catch(() => 'Refresh failed');
       throw new Error(message || 'Refresh failed');
