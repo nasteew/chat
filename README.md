@@ -1,4 +1,4 @@
-# Fun Chat
+# Fun Chat 
 
 Real-time online chat with private messaging, read receipts, typing indicators, online presence, and user profiles.
 
