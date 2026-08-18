@@ -44,6 +44,19 @@ export function StatusIcon({ status }: { status?: MessageStatus }) {
           <path d="M22 6L11 17" />
         </svg>
       )}
+      {status === 'failed' && (
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M15 9l-6 6M9 9l6 6" />
+        </svg>
+      )}
     </span>
   );
 }

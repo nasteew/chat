@@ -124,6 +124,10 @@
   height: 14px;
 }
 
+.failed {
+  color: #e74c3c;
+}
+
 .deleted {
   opacity: 0.5;
   font-style: italic;

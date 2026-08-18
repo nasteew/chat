@@ -11,7 +11,6 @@ import { useOtherUser } from '@/hooks/users/useOtherUser';
 import { useChatStore } from '@/store/chatStore';
 import { useEffect } from 'react';
 import { socketService } from '@/api/socket';
-import { useChatListStore } from '@/store/chatListStore';
 
 export const ChatPage = () => {
   const { id: chatId } = useParams();
@@ -24,7 +23,6 @@ export const ChatPage = () => {
     useChatStore.getState().setActiveChatId(id);
 
     if (id) {
-      useChatListStore.getState().markChatAsRead(id);
       socketService.send({
         type: 'CHAT_OPEN',
         payload: { chat_id: id },

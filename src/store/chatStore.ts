@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Message, ChatStore, MessageStatus } from '@/types/message';
 import type { User } from '@/types/auth';
+import { mergeMessagesWithApi } from '@/utils/mergeMessages';
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
@@ -18,6 +19,11 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   setMessages: (msgs: Message[]) => set({ messages: msgs }),
 
+  mergeMessages: (apiMessages: Message[]) =>
+    set((state) => ({
+      messages: mergeMessagesWithApi(apiMessages, state.messages),
+    })),
+
   addMessage: (msg: Message) =>
     set((state) => ({
       messages: [...state.messages, msg],
@@ -26,7 +32,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   updateMessageStatus: (messageId: string, status: MessageStatus) =>
     set((state) => ({
       messages: state.messages.map((m) =>
-        m.id === messageId ? { ...m, status } : m
+        m.id === messageId || m.clientId === messageId ? { ...m, status } : m
       ),
     })),
 

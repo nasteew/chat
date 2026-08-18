@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMessages } from '@/hooks/chat/useMessages';
 import { socketService } from '@/api/socket';
+import { useConnectionStore } from '@/store/connectionStore';
 
 import styles from './ChatInput.module.css';
 
@@ -10,6 +11,7 @@ export const ChatInput = () => {
   const hasChat = Boolean(id);
 
   const { send } = useMessages(id || '');
+  const connectionStatus = useConnectionStore((s) => s.status);
   const [text, setText] = useState('');
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTypingRef = useRef(false);
@@ -60,34 +62,45 @@ export const ChatInput = () => {
 
   return (
     <div className={styles.inputBox}>
-      <input
-        className={styles.input}
-        placeholder="Message..."
-        value={text}
-        disabled={!hasChat}
-        onChange={(e) => {
-          setText(e.target.value);
-          if (hasChat) handleTyping();
-        }}
-        onKeyDown={(e) => hasChat && e.key === 'Enter' && handleSend()}
-      />
+      {connectionStatus !== 'connected' && (
+        <div className={styles.connectionHint} role="status">
+          {connectionStatus === 'reconnecting'
+            ? 'Reconnecting…'
+            : connectionStatus === 'connecting'
+              ? 'Connecting…'
+              : 'Disconnected'}
+        </div>
+      )}
+      <div className={styles.inputRow}>
+        <input
+          className={styles.input}
+          placeholder="Message..."
+          value={text}
+          disabled={!hasChat}
+          onChange={(e) => {
+            setText(e.target.value);
+            if (hasChat) handleTyping();
+          }}
+          onKeyDown={(e) => hasChat && e.key === 'Enter' && handleSend()}
+        />
 
-      <button
-        className={`${styles.send} ${text.trim() ? styles.active : ''}`}
-        onClick={handleSend}
-        disabled={!hasChat || !text.trim()}
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
+        <button
+          className={`${styles.send} ${text.trim() ? styles.active : ''}`}
+          onClick={handleSend}
+          disabled={!hasChat || !text.trim()}
         >
-          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-        </svg>
-      </button>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };

@@ -6,6 +6,12 @@ export type ServerWsMessage =
       };
     }
   | {
+      type: 'AUTH_FAILURE';
+      payload: {
+        reason: string;
+      };
+    }
+  | {
       type: 'USER_ONLINE';
       payload: {
         user_id: string;
@@ -83,5 +89,14 @@ export type ServerWsMessage =
         sender_id: string;
 
         last_read_message_id: string;
+      };
+    }
+  | {
+      type: 'MSG_ERROR';
+      payload: {
+        code: string;
+        chat_id: string;
+        temp_id?: string;
+        message?: string;
       };
     };

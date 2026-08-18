@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 import { onlineApi } from '@/api/onlineApi';
 import type { MessageStatus } from '@/types/message';
 import { useChatListStore } from '@/store/chatListStore';
+import { clearSession } from '@/api/tokenRefresh';
 
 export function useSocket() {
   const token = useAuthStore((s) => s.accessToken);
@@ -44,6 +45,21 @@ export function useSocket() {
               type: 'CHAT_OPEN',
               payload: { chat_id: activeChatId },
             });
+          }
+          break;
+        }
+
+        case 'AUTH_FAILURE':
+          clearSession();
+          break;
+
+        case 'MSG_ERROR': {
+          const { chat_id, temp_id } = msg.payload;
+          if (!temp_id) break;
+
+          const chatStore = useChatStore.getState();
+          if (String(chatStore.activeChatId) === String(chat_id)) {
+            chatStore.updateMessageStatus(temp_id, 'failed');
           }
           break;
         }

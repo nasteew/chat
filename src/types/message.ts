@@ -1,6 +1,6 @@
 import type { User } from './auth';
 
-export type MessageStatus = 'pending' | 'sent' | 'read';
+export type MessageStatus = 'pending' | 'sent' | 'read' | 'failed';
 
 export interface Message {
   id: string;
@@ -28,6 +28,7 @@ export interface ChatStore {
   setActiveChatId: (id: string) => void;
 
   setMessages: (msgs: Message[]) => void;
+  mergeMessages: (msgs: Message[]) => void;
   addMessage: (msg: Message) => void;
   updateMessageStatus: (messageId: string, status: MessageStatus) => void;
   markAsRead: (messageId: string) => void;

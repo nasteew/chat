@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useOnlineUsers } from '@/hooks/users/useOnlineUsers';
 import { useUserSearch } from '@/hooks/users/useUserSearch';
 import { useAuthStore } from '@/store/authStore';
@@ -44,16 +45,20 @@ export const Sidebar = () => {
   const handleProfileClick = () => navigate('/profile');
 
   const handleUserClick = async (userId: string) => {
-    const existing = chats.find((c) => c.participants.includes(userId));
-    if (existing) {
-      navigate(`/chat/${existing.id}`);
-      return;
+    try {
+      const existing = chats.find((c) => c.participants.includes(userId));
+      if (existing) {
+        navigate(`/chat/${existing.id}`);
+        return;
+      }
+      const newChat = await chatApi.createChat(userId);
+      setChats([...chats, normalizeChat(newChat)]);
+      const u = await userApi.getUserById(userId);
+      useChatStore.getState().setOtherUser(u);
+      navigate(`/chat/${newChat.id}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to open chat');
     }
-    const newChat = await chatApi.createChat(userId);
-    setChats([...chats, normalizeChat(newChat)]);
-    const u = await userApi.getUserById(userId);
-    useChatStore.getState().setOtherUser(u);
-    navigate(`/chat/${newChat.id}`);
   };
 
   return (
